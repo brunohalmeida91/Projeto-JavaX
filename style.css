@@ -1,0 +1,189 @@
+:root {
+  --bg-dark: #060814;
+  --bg-card: rgba(15, 20, 38, 0.75);
+  --neon-cyan: #00f3ff;
+  --neon-purple: #9d4edd;
+  --text-glow-cyan: 0 0 12px rgba(0, 243, 255, 0.8);
+  --text-glow-purple: 0 0 12px rgba(157, 78, 221, 0.8);
+  --border-glow: rgba(0, 243, 255, 0.25);
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #e2e8f0;
+  font-family: "Rajdhani", sans-serif;
+  font-size: 1.15rem;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+.font-orbitron {
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 1px;
+}
+
+/* Ambient Glow Background Effects */
+.glow-bg-1 {
+  position: fixed;
+  top: -10%;
+  left: -10%;
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(
+    circle,
+    rgba(0, 243, 255, 0.12) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+.glow-bg-2 {
+  position: fixed;
+  top: 40%;
+  right: -10%;
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(
+    circle,
+    rgba(157, 78, 221, 0.12) 0%,
+    rgba(0, 0, 0, 0) 70%
+  );
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Glassmorphism Cards & Containers */
+.glass-card {
+  background: var(--bg-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glow);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  transition: all 0.35s ease-in-out;
+  overflow: hidden;
+}
+
+.glass-card:hover {
+  border-color: rgba(0, 243, 255, 0.6);
+  box-shadow: 0 12px 40px 0 rgba(0, 243, 255, 0.25);
+  transform: translateY(-6px);
+}
+
+/* Glass Navbar */
+.glass-nav {
+  background: rgba(6, 8, 20, 0.85);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border-glow);
+}
+
+/* Custom Brand Logo */
+.brand-logo {
+  font-family: "Orbitron", sans-serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: #ffffff;
+  letter-spacing: 2px;
+}
+
+.brand-logo .x-letter {
+  color: var(--neon-cyan);
+  text-shadow: var(--text-glow-cyan);
+}
+
+/* Car Image Wrapper */
+.car-img-container {
+  position: relative;
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  border-radius: 12px;
+  margin-bottom: 1.2rem;
+  background-color: #0d1224;
+}
+
+.car-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.glass-card:hover .car-img-container img {
+  transform: scale(1.08);
+}
+
+.car-overlay-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  backdrop-filter: blur(8px);
+  background: rgba(6, 8, 20, 0.7);
+}
+
+/* Neon Buttons */
+.btn-neon-cyan {
+  background: transparent;
+  color: var(--neon-cyan);
+  border: 2px solid var(--neon-cyan);
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0, 243, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-neon-cyan:hover {
+  background: var(--neon-cyan);
+  color: #000;
+  box-shadow: 0 0 25px rgba(0, 243, 255, 0.85);
+}
+
+.btn-neon-purple {
+  background: transparent;
+  color: var(--neon-purple);
+  border: 2px solid var(--neon-purple);
+  font-family: "Orbitron", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(157, 78, 221, 0.3);
+  transition: all 0.3s ease;
+}
+
+.btn-neon-purple:hover {
+  background: var(--neon-purple);
+  color: #fff;
+  box-shadow: 0 0 25px rgba(157, 78, 221, 0.85);
+}
+
+/* Title Highlights */
+.title-gradient {
+  background: linear-gradient(
+    135deg,
+    #ffffff 30%,
+    var(--neon-cyan) 70%,
+    var(--neon-purple) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Range Slider Custom Styling */
+.form-range::-webkit-slider-thumb {
+  background: var(--neon-cyan);
+  box-shadow: 0 0 10px var(--neon-cyan);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: #0f1322;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 12px rgba(0, 243, 255, 0.4);
+  color: #fff;
+}
