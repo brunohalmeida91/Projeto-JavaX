@@ -89,7 +89,9 @@ h4,
   color: #ffffff;
   letter-spacing: 2px;
 }
-
+.brand-logo:hover {
+  color: #9d4edd;
+}
 .brand-logo .x-letter {
   color: var(--neon-cyan);
   text-shadow: var(--text-glow-cyan);
