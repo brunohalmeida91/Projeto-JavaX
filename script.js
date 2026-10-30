@@ -28,18 +28,176 @@ function selectCarModel(modelName) {
 }
 
 // Manipulação do Formulário
-function handleFormSubmit(e) {
-  e.preventDefault();
-  const alertBox = document.getElementById("alertBox");
-  alertBox.classList.remove("d-none");
-  document.getElementById("testDriveForm").reset();
+const STORAGE_KEY = "javax_agendamentos";
 
-  setTimeout(() => {
-    alertBox.classList.add("d-none");
-  }, 5000);
+// ---------- Armazenamento ----------
+function getBookings() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+  } catch {
+    return [];
+  }
 }
 
-// Inicialização
+function saveBookings(list) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+}
+
+// ---------- Utilitários ----------
+function escapeHtml(text) {
+  const div = document.createElement("div");
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function getModelLabel(value) {
+  const opt = document.querySelector(`#carModelSelect option[value="${value}"]`);
+  return opt ? opt.textContent : value;
+}
+
+function formatDate(isoDate) {
+  const [y, m, d] = isoDate.split("-");
+  return `${d}/${m}/${y}`;
+}
+
+function showAlert(message, type = "success") {
+  const alertBox = document.getElementById("alertBox");
+  const icon = type === "success" ? "fa-check-circle" : "fa-exclamation-circle";
+  alertBox.innerHTML = `<i class="fas ${icon} text-info me-2"></i> ${message}`;
+  alertBox.classList.remove("d-none");
+  setTimeout(() => alertBox.classList.add("d-none"), 5000);
+}
+
+// Preenche as opções de horário (09:00 às 17:00)
+function fillTimeOptions() {
+  const select = document.getElementById("timeInput");
+  for (let h = 9; h <= 17; h++) {
+    const time = String(h).padStart(2, "0") + ":00";
+    select.innerHTML += `<option value="${time}">${time}</option>`;
+  }
+}
+
+// ---------- CREATE / UPDATE ----------
+function handleFormSubmit(e) {
+  e.preventDefault();
+
+  const id = document.getElementById("bookingId").value;
+  const booking = {
+    id: id || Date.now().toString(),
+    name: document.getElementById("nameInput").value.trim(),
+    email: document.getElementById("emailInput").value.trim(),
+    model: document.getElementById("carModelSelect").value,
+    date: document.getElementById("dateInput").value,
+    time: document.getElementById("timeInput").value,
+  };
+
+  const bookings = getBookings();
+
+  // Evita dois agendamentos do mesmo carro na mesma data e horário
+  const conflict = bookings.some(
+    (b) =>
+      b.id !== booking.id &&
+      b.model === booking.model &&
+      b.date === booking.date &&
+      b.time === booking.time
+  );
+  if (conflict) {
+    showAlert("Esse modelo já está reservado nesse dia e horário. Escolha outro horário.", "error");
+    return;
+  }
+
+  if (id) {
+    // UPDATE
+    const index = bookings.findIndex((b) => b.id === id);
+    bookings[index] = booking;
+    showAlert("Agendamento atualizado com sucesso!");
+  } else {
+    // CREATE
+    bookings.push(booking);
+    showAlert("Agendamento realizado com sucesso! Nossa equipe entrará em contato para confirmar sua experiência.");
+  }
+
+  saveBookings(bookings);
+  resetForm();
+  renderBookings();
+}
+
+// ---------- READ ----------
+function renderBookings() {
+  const container = document.getElementById("bookingsList");
+  const bookings = getBookings().sort((a, b) =>
+    (a.date + a.time).localeCompare(b.date + b.time)
+  );
+
+  if (bookings.length === 0) {
+    container.innerHTML = `<p class="text-secondary small mb-0">Nenhum agendamento ainda.</p>`;
+    return;
+  }
+
+  container.innerHTML = bookings
+    .map(
+      (b) => `
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2 border border-secondary border-opacity-25 rounded-3 p-3 mb-2">
+        <div>
+          <strong class="text-info font-orbitron">${escapeHtml(getModelLabel(b.model))}</strong>
+          <div class="small text-white">
+            <i class="far fa-calendar me-1"></i>${formatDate(b.date)}
+            <i class="far fa-clock ms-2 me-1"></i>${b.time}
+          </div>
+          <div class="small text-secondary">${escapeHtml(b.name)} · ${escapeHtml(b.email)}</div>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-neon-cyan" onclick="editBooking('${b.id}')">
+            <i class="fas fa-pen"></i> Editar
+          </button>
+          <button class="btn btn-sm btn-neon-purple" onclick="deleteBooking('${b.id}')">
+            <i class="fas fa-trash"></i> Cancelar
+          </button>
+        </div>
+      </div>`
+    )
+    .join("");
+}
+
+// ---------- UPDATE (carregar no formulário) ----------
+function editBooking(id) {
+  const b = getBookings().find((item) => item.id === id);
+  if (!b) return;
+
+  document.getElementById("bookingId").value = b.id;
+  document.getElementById("nameInput").value = b.name;
+  document.getElementById("emailInput").value = b.email;
+  document.getElementById("carModelSelect").value = b.model;
+  document.getElementById("dateInput").value = b.date;
+  document.getElementById("timeInput").value = b.time;
+
+  document.getElementById("submitBtn").textContent = "Salvar Alterações";
+  document.getElementById("cancelEditBtn").classList.remove("d-none");
+  document.getElementById("testDriveForm").scrollIntoView({ behavior: "smooth" });
+}
+
+// ---------- DELETE ----------
+function deleteBooking(id) {
+  if (!confirm("Deseja realmente cancelar este agendamento?")) return;
+
+  saveBookings(getBookings().filter((b) => b.id !== id));
+  renderBookings();
+  showAlert("Agendamento cancelado.");
+}
+
+// ---------- Reset do formulário ----------
+function resetForm() {
+  document.getElementById("testDriveForm").reset();
+  document.getElementById("bookingId").value = "";
+  document.getElementById("submitBtn").textContent = "Confirmar Agendamento";
+  document.getElementById("cancelEditBtn").classList.add("d-none");
+}
+
+// ---------- Inicialização ----------
 window.onload = function () {
   updateCalculator();
+  fillTimeOptions();
+  // Não permite datas passadas
+  document.getElementById("dateInput").min = new Date().toISOString().split("T")[0];
+  renderBookings();
 };

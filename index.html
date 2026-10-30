@@ -419,59 +419,57 @@
                 confirmar sua experiência.
               </div>
 
-              <form id="testDriveForm" onsubmit="handleFormSubmit(event)">
-                <div class="row g-3">
-                  <div class="col-md-6">
-                    <label class="form-label text-white small"
-                      >Nome Completo</label
-                    >
-                    <input
-                      type="text"
-                      class="form-control bg-dark text-white border-secondary"
-                      required
-                      placeholder="Seu nome"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label text-white small">E-mail</label>
-                    <input
-                      type="email"
-                      class="form-control bg-dark text-white border-secondary"
-                      required
-                      placeholder="seu@email.com"
-                    />
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label text-white small"
-                      >Modelo Escolhido</label
-                    >
-                    <select
-                      id="carModelSelect"
-                      class="form-select bg-dark text-white border-secondary"
-                      required
-                    >
-                      <option value="Java X Neo">Java X Sedan</option>
-                      <option value="Java X CyberSUV">Java X SUV</option>
-                      <option value="Java X GT">Java Super</option>
-                    </select>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label text-white small"
-                      >Data Preferida</label
-                    >
-                    <input
-                      type="date"
-                      class="form-control bg-dark text-white border-secondary"
-                      required
-                    />
-                  </div>
-                  <div class="col-12 mt-4">
-                    <button type="submit" class="btn btn-neon-cyan w-100 py-3">
-                      Confirmar Agendamento
-                    </button>
-                  </div>
-                </div>
-              </form>
+            <form id="testDriveForm" onsubmit="handleFormSubmit(event)">
+  <input type="hidden" id="bookingId" />
+  <div class="row g-3">
+    <div class="col-md-6">
+      <label class="form-label text-white small">Nome Completo</label>
+      <input type="text" id="nameInput"
+        class="form-control bg-dark text-white border-secondary"
+        required placeholder="Seu nome" />
+    </div>
+    <div class="col-md-6">
+      <label class="form-label text-white small">E-mail</label>
+      <input type="email" id="emailInput"
+        class="form-control bg-dark text-white border-secondary"
+        required placeholder="seu@email.com" />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-white small">Modelo Escolhido</label>
+      <select id="carModelSelect"
+        class="form-select bg-dark text-white border-secondary" required>
+        <option value="Java X Neo">Java X Sedan</option>
+        <option value="Java X CyberSUV">Java X SUV</option>
+        <option value="Java X GT">Java X Super</option>
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-white small">Data Preferida</label>
+      <input type="date" id="dateInput"
+        class="form-control bg-dark text-white border-secondary" required />
+    </div>
+    <div class="col-md-4">
+      <label class="form-label text-white small">Horário</label>
+      <select id="timeInput"
+        class="form-select bg-dark text-white border-secondary" required>
+      </select>
+    </div>
+    <div class="col-12 mt-4 d-flex gap-2">
+      <button type="submit" id="submitBtn" class="btn btn-neon-cyan flex-grow-1 py-3">
+        Confirmar Agendamento
+      </button>
+      <button type="button" id="cancelEditBtn"
+        class="btn btn-outline-secondary d-none" onclick="resetForm()">
+        Cancelar edição
+      </button>
+    </div>
+  </div>
+</form>
+
+<!-- Lista de agendamentos (READ) -->
+<hr class="border-secondary border-opacity-25 my-4" />
+<h3 class="h5 font-orbitron text-white mb-3">Meus Agendamentos</h3>
+<div id="bookingsList"></div>
             </div>
           </div>
         </div>
